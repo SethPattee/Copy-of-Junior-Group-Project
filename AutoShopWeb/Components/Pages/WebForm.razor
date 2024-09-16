@@ -1,0 +1,13 @@
+﻿@page "/form"
+@using System.Diagnostics.Metrics
+@rendermode InteractiveServer
+<AutoShopAppLibrary.Components.TesterForm></AutoShopAppLibrary.Components.TesterForm>
+
+@code {
+    Meter demo_meter = new(WebMeters.RequestServicePageLoads.Name, "1.0.0"); //do I even need this line??
+
+    protected override void OnInitialized()
+    {
+        WebMeters.RequestServicePageLoads.Add(1); //meter to count how ofen the form page is loaded
+    }
+}

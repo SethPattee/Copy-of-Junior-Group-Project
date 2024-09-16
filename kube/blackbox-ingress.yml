@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: auto
+  name: blackbox-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: blackbox.fngauto.duckdns.org 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: blackbox-service
+            port:
+              number: 9115

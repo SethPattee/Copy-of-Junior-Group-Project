@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: auto
+  name: blazor-web-service
+spec:
+  type: ClusterIP
+  selector:
+    app: blazor-web
+  ports:
+    - port: 80
+      targetPort: 8080
+
+#

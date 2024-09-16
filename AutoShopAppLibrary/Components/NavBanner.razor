@@ -1,0 +1,156 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+@inject NavigationManager navManager
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <!-- Making the navbar fixed to the top -->
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="your-logo.jpg" alt="Logo" height="60">
+        </a>
+
+
+        <button class="navbar-toggler" @onclick="ToggleNavCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="@NavMenuCssClass" @onclick="ToggleNavCollapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item @(IsSelected("/") ? "active" : "")">
+                    <a class="nav-link h4" href="/">Home</a>
+                </li>
+                <li class="nav-item @(IsSelected("/frequently-asked-questions") ? "active" : "")">
+                    <a class="nav-link h4" href="/frequently-asked-questions">FAQ</a>
+                </li>
+                <li class="nav-item @(IsSelected("/services") ? "active" : "")">
+                    <a class="nav-link h4" href="/services">Services</a>
+                </li>
+                <li class="nav-item @(IsSelected("/form") ? "active" : "")">
+                    <a class="nav-link h4" href="/form">Request Service</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</nav>
+
+
+<style>
+    body {
+        /* background-image: url('your-background-image.jpg'); /* Background image for the top section */ */
+        /* background-size: cover;
+            background-attachment: fixed;
+            background-repeat: no-repeat; */
+        color: white;
+        margin: 0;
+        /*  padding-top: 100px; ## I changed this i should unchange it */
+    }
+
+    .navbar-brand {
+        margin-right: auto;
+    }
+
+    .navbar-nav {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .nav-item {
+        flex-grow: 1;
+        text-align: center;
+    }
+</style>
+
+@code {
+    private string currentpage;
+    private string homecolor = "rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important";
+    private string faqcolor = "rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important";
+    private string servcolor = "rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important";
+    private string formcolor = "rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important";
+
+    protected override void OnInitialized()
+    {
+        int baseUrlPosEnd = navManager.Uri.LastIndexOf('/');
+        currentpage = navManager.Uri.Remove(0, baseUrlPosEnd + 1);
+
+        if (currentpage == "" || currentpage == "home") homecolor = "gainsboro";
+        if (currentpage == "frequently-asked-questions") faqcolor = "gainsboro";
+        if (currentpage == "services") servcolor = "gainsboro";
+        if (currentpage == "form") formcolor = "gainsboro";
+    }
+    private bool collapseNavMenu = true;
+
+    private void ToggleNavCollapse()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse navbar-collapse" : "navbar-collapse";
+
+    private bool IsSelected(string uri)
+    {
+        return navManager.Uri.Contains(uri);
+    }
+}
+
+<!-- This one is from Chat-->
+   @*  @inject NavigationManager navManager *@
+
+@* <!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <!-- Making the navbar fixed to the top -->
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="your-logo.jpg" alt="Logo" height="60">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/" aria-hidden="true">Home</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/frequently-asked-questions" aria-hidden="true">FAQ</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/services" aria-hidden="true">Services</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/form" aria-hidden="true">Form</NavLink>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav> *@
+
+@code {
+    // No need for OnInitialized method for setting active state
+}
+
+ @* <div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">AutoShopWeb</a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="form" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Form
+            </NavLink>
+        </div>
+    </nav>
+</div>
+
+ *@

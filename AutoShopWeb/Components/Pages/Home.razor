@@ -1,0 +1,104 @@
+﻿@page "/"
+@using AutoShopAppLibrary.Components
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Win32
+@using System.Diagnostics.Metrics
+
+@inject NavigationManager Navigation
+@inject IJSRuntime _jsruntime
+@rendermode InteractiveServer
+
+@* old code *@
+<body>
+    <div class="background">
+
+        <img src="./your-background-image.jpg" class="image" />
+
+        <div class="buttonandimage">
+            <img src="./your-logo.jpg" class="logo" />
+            <h4>Your Local Auto Repair Shop</h4>
+            <a class="btn btn-primary btn-lg call-now" href="mailto:info@example.com?subject=request service">Contact us!</a>
+@*             <button class="btn btn-primary btn-lg call-now">Contact us!</button> *@
+        </div>
+    </div>
+    <div class="content">
+        <div class="our-story-container">
+            <OurStory></OurStory>
+        </div>
+
+        <div class="row location-and-map-container">@*  i got rid of the location-block class *@
+            <div class="col-lg-6 order-lg-2 order-1">
+                <div class="location-block d-flex align-items-center h-100">
+                    <Location></Location>
+                </div>
+            </div>
+            <div class="col-lg-6 order-lg-1 order-2">
+                <MapPage></MapPage>
+            </div>
+        </div>
+        <div class="news-container">
+        </div>
+    </div>
+    <WebFooter></WebFooter>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="@madURL"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+@*
+<script src="https://cdn.jsdelivr.net/npm/fireworks-js@2.x/dist/index.umd.js"></script>
+
+<!-- UNPKG -->
+<script src="https://unpkg.com/fireworks-js@2.x/dist/index.umd.js"></script>
+
+<!-- Usage -->
+<script>
+    const container = document.querySelector('.fireworks');
+    const fireworks = new Fireworks.default(container);
+    fireworks.start();
+    fireworks.launch(30);
+</script> *@
+
+@*
+<AuthorizeView>
+    <Authorized>
+        You Are AUTHORIZED
+    </Authorized>
+    <NotAuthorized>
+        GO AWAY
+    </NotAuthorized>
+</AuthorizeView> *@
+
+
+@code {
+    string madURL = "https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js";
+
+
+    public async Task OpenEmailAsync()
+    {
+        // object? emailRelay = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail", "", "none");
+        // string emailURI = "https://outlook.live.com/mail/";
+        // var emailClient = emailRelay;
+
+        // if (emailClient != null && (emailClient.ToString() ?? "").ToLower().Contains("gmail"))
+        // {
+        //     emailURI = "https://mail.google.com//mail";
+
+        //     await _jsruntime.InvokeAsync<object>("open", emailURI);
+        // }
+        // else
+        // {
+        //     await _jsruntime.InvokeAsync<object>("open", emailURI);
+        // }
+
+    }
+
+    // ActivityMeter.reloadMeter.Name,
+    Meter demo_meter = new(WebMeters.HomePageLoads.Name, "1.0.0"); //do I even need this line??
+
+    protected override void OnInitialized()
+    {
+        WebMeters.HomePageLoads.Add(1); //meter to count how ofen the home page is loaded
+
+    }
+}

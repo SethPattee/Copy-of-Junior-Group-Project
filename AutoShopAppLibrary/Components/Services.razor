@@ -1,0 +1,101 @@
+
+@* <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+</head> *@
+<body>
+    <div class="container services-container">
+        <img src="./your-background-image.jpg" class="services-background-image" />
+        <div class="services-image-box">
+            <h1>Services</h1>
+            <p>Here at FNG Autowerks, we are excited to offer a variety of services, ranging from maintenance to fixing large issues. Here are some common services customers request:</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="service-row">
+                        <td>Oil Change</td>
+                        <td>$50.00</td>
+                        <td><button class="btn btn-primary serv-item-button" data-target="#oilChangeInfo">Why do I need this?</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="collapse" id="oilChangeInfo">
+                            Regular oil changes help keep your engine running smoothly by removing dirt and debris from the engine oil, preventing wear and tear on engine components.
+                        </td>
+                    </tr>
+                    <!-- Repeat similar structure for other services -->
+                    <tr class="service-row">
+                        <td>Tire Rotation</td>
+                        <td>$20.00</td>
+                        <td><button class="btn btn-primary serv-item-button" data-target="#tireRotationInfo">Why do I need this?</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="collapse" id="tireRotationInfo">
+                            Tire rotation ensures that all tires wear evenly, which extends their lifespan and improves vehicle handling and safety.
+                        </td>
+                    </tr>
+                    <tr class="service-row">
+                        <td>Checkup</td>
+                        <td>$100.00</td>
+                        <td><button class="btn btn-primary serv-item-button" data-target="#checkupInfo">Why do I need this?</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="collapse" id="checkupInfo">
+                            Regular vehicle checkups help identify any potential issues early, preventing costly repairs and ensuring your vehicle's reliability.
+                        </td>
+                    </tr>
+                    <tr class="service-row">
+                        <td>Brakes</td>
+                        <td>Starting from $150.00</td>
+                        <td><button class="btn btn-primary serv-item-button" data-target="#brakesInfo">Why do I need this?</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="collapse" id="brakesInfo">
+                            Brake maintenance is crucial for vehicle safety. Regular brake inspections and repairs ensure that your vehicle can stop safely and effectively.
+                        </td>
+                    </tr>
+                    <tr class="service-row">
+                        <td>Check Engine Light Troubleshooting</td>
+                        <td>$50.00</td>
+                        <td><button class="btn btn-primary serv-item-button" data-target="#checkEngineInfo">Why do I need this?</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="collapse" id="checkEngineInfo">
+                            Diagnosing the check engine light helps identify potential issues with your vehicle's engine or emissions system, preventing further damage and ensuring compliance with emissions regulations.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <!-- jQuery and Bootstrap Bundle JS -->
+    @* <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> *@
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.btn-primary').click(function () {
+                // Check if the clicked button is outside of the navbar
+                if (!$(this).closest('.navbar').not('.serv-item-button').length) {
+                    $($(this).data('target')).toggleClass('show');
+                }
+            });
+        });
+
+    </script>
+</body>
+
+
+@code {
+    string madURL = "https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js";
+}

@@ -1,0 +1,159 @@
+services:
+    db:
+        image: postgres
+        restart: always
+        ports:
+            - 5444:5432
+        volumes:
+            - ./init.sql:/docker-entrypoint-initdb.d/a_init.sql
+        environment:
+            POSTGRES_DB: postgres
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+    
+    autoshop-webapp: 
+        build: ../
+        ports: 
+          - 7655:8080
+        depends_on:
+          - db 
+        environment:
+          ASPNETCORE_ENVIRONMENT: Development
+          database: user id=postgres;password=postgres;server=db;database=postgres;port=5432;
+          MapKey: "123435"
+          TurnOnFeatureFlag: "true"
+        healthcheck:
+            test: curl --fail http://localhost:8070/health || exit 1
+            interval: 10s
+            retries: 7
+            start_period: 20s
+            timeout: 10s
+        restart: unless-stopped
+
+    blackbox:
+    # https://github.com/prometheus/blackbox_exporter/releases
+        image: prom/blackbox-exporter:v0.23.0
+        container_name: autoblackbox
+        restart: unless-stopped
+        ports:
+            - 9995:9115
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - ./blackbox/blackbox.yml:/etc/blackbox/blackbox.yml
+        command: --config.file=/etc/blackbox/blackbox.yml
+
+    prometheus:
+        image: prom/prometheus:v2.43.0
+        container_name: autoprometheus
+        hostname: prometheus
+        restart: unless-stopped
+        ports:
+            - 9876:9090
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+            - prometheus:/prometheus
+        depends_on: 
+            - blackbox
+    grafana:
+    # https://github.com/grafana/grafana/releases
+        image: grafana/grafana:9.4.7
+        container_name: autografana
+        environment:
+            - GF_AUTH_ANONYMOUS_ENABLED=true
+            - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+            - GF_AUTH_DISABLE_LOGIN_FORM=true
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - grafana-data:/var/lib/grafana
+            - ./grafana/provisioning:/etc/grafana/provisioning
+        restart: unless-stopped
+        #user: root
+        ports:
+            - 3113:3000
+        depends_on:
+            - loki      
+            - prometheus
+
+    loki:
+        image: grafana/loki:2.8.0
+        container_name: autoloki
+        command: -config.file=/etc/loki/local-config.yaml
+        volumes:
+            - /etc/localtime:/etc/localtime:ro      
+            - ./loki/loki.yml:/etc/loki/local-config.yaml
+            - loki:/data/loki
+        restart: unless-stopped
+        ports:
+            - 3109:3100
+
+    zipkin:
+        container_name: autozipkin
+        image: openzipkin/zipkin
+        restart: always
+        ports:
+            - 1411:9411
+
+    swag:
+        image: lscr.io/linuxserver/swag
+        container_name: autoswag
+        cap_add:
+            - NET_ADMIN
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=America/Denver
+            - URL=autotelem.duckdns.org
+            - SUBDOMAINS=www,
+            - VALIDATION=duckdns
+            - DUCKDNSTOKEN=50d678c6-f273-4d9a-8932-11d595ec18e0 #optional
+            #- EMAIL=<e-mail> #optional
+            #- ONLY_SUBDOMAINS=false #optional
+            #- EXTRA_DOMAINS=<extradomains> #optional
+            - STAGING=true #optional
+        volumes:
+            - swag_data:/config
+            - ./nginx-default.conf:/config/nginx/site-confs/default.conf
+        ports:
+            - 4392:443
+        restart: unless-stopped
+
+    otel-collector:
+    # https://github.com/open-telemetry/opentelemetry-collector-contrib/releases
+        container_name: autootel
+        hostname: otel
+        image: otel/opentelemetry-collector-contrib:0.75.0
+        command: ["--config=/etc/otel-collector-config.yml"]
+        volumes:
+            - ./otel/otel.yml:/etc/otel-collector-config.yml
+        restart: unless-stopped
+    # ports:
+    #     - 8888:8888   # Prometheus metrics exposed by the collector
+    #     - 8889:8889   # Prometheus exporter metrics
+    #     - 4317:4317   # OTLP gRPC receiver
+    #   - 9200:55679  # zpages
+    #   - 13133:13133 # Health check
+    #   #- 1411:1411   #Zipken
+
+    # proxy:
+  #   image: nginx
+  #   container_name: seth-nginx
+  #   ports:
+  #     - 5469:80
+  #   volumes: 
+  #    - ./nginx-default.conf:/etc/nginx/conf.d/default.conf
+  #   networks:
+  #     otel:
+  #   depends_on:
+  #     - blazorapp
+volumes:
+  loki:
+  prometheus:
+  grafana-data:
+  swag_data:
+
+#wsl --list
+#wsl --unregister Ubuntu
+#wsl --unregister docker-desktop
+#wsl --unregister docker-desktop-data
+    #an extra commit

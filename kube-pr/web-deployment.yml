@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ${NAMESPACE} 
+  name: auto-blazor-web-deployment
+  labels:
+    app: blazor-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blazor-web
+  template:
+    metadata:
+      labels:
+        app: blazor-web
+    spec:
+      containers:
+      - name: blazor-web
+        image: 144.17.92.12:5000/auto/blazor-web:${RUN_SALT}
+        ports:
+        - containerPort: 8080
+        env:
+        - name: database
+          value: "Server=blazor-web-db-service;password=postgres;user id=postgres;database=postgres;" # Added quotes around value
+        - name: COLLECTOR_URL
+          value: "http://otel-collector-service:4317" # Added quotes around value

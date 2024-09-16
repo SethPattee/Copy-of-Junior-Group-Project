@@ -1,0 +1,113 @@
+
+.comments-box {
+    height: 100px; /* Adjust height as needed */
+}
+
+.form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+    margin: 90px auto 0px auto;
+    padding: 40px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    overflow-wrap: break-word;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+p {
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+.comments-box {
+    width: calc(100% - 12px);
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+input[type="textarea"] {
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    max-width: calc(100% - 12px);
+}
+
+
+.comments-box {
+    height: 80px;
+}
+
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+.confirm-message {
+    position: absolute;
+    top: 50px;
+    width: auto;
+    height: 20px;
+    padding: 5px;
+    margin: 12px;
+    background-color: lightgreen;
+    border-top-color: forestgreen;
+    border-top-width: 5px;
+    border-top-style: solid;
+    border-bottom-color: mediumseagreen;
+    border-bottom-width: 3px;
+    border-bottom-style: solid;
+}
+
+.form-background-image {
+    background-color: rgba(255, 255, 255, 0.5); /* Adjust opacity as needed */
+    width: calc(100%-12px);
+    height: 105%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow-x: clip;
+    object-fit: cover;
+    position: absolute;
+    -webkit-filter: blur(8px);
+}
+
+.issue-message {
+    padding: 0.5px 0px;
+    border-radius: 3px;
+    border-top: 2px solid red;
+    border-bottom: 2px solid red;
+    background-color: rgb(240 128 128 / 50%);
+    color: rgba(0, 0, 0, 0.9) !important;
+    font-weight: bold;
+}

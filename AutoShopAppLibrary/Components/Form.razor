@@ -1,0 +1,97 @@
+@using AutoShopAppLibrary.Data
+@using AutoShopAppLibrary.Shared
+@using MailKit
+@using MailKit.Net.Smtp
+@using MimeKit
+@inject NavigationManager nav
+@inject IEmailService _es
+
+@* <style>
+    /* Add CSS to adjust form position */
+    .form-container {
+        margin-top: 100px; /* Adjust this value based on the height of your navigation bar */
+    }
+</style> *@
+
+<div class="form-container">
+    <h1>Please enter the following information so we can service your car:</h1>
+
+    @if (stepOfForm == 1)
+    {
+        <p>Name: <input type="text" @bind-value=@FormElements["Name"] /></p>
+        <p>Phone: <input type="tel" @bind-value=@FormElements["Phone"] /></p>
+        <p>Email: <input type="email" @bind-value=@FormElements["Email"] /></p>
+        <br />
+        <br />
+        <button class="btn btn-primary" @onclick="ProcessStep">Next</button>
+    }
+    else if (stepOfForm == 2)
+    {
+        <p>Make: <input type="text" @bind-value=@FormElements["Make"] /></p>
+        <p>Model: <input type="text" @bind-value=@FormElements["Model"] /></p>
+        <p>Year: <input type="number" @bind-value=@FormElements["Year"] /></p>
+        <p>Odometer: <input type="number" @bind-value=@FormElements["Odometer"] /></p>
+        <p>Comments: <input class="comments-box" type="text" @bind-value=@FormElements["Comments"] /></p>
+        <br />
+        <br />
+        <button class="btn btn-primary" @onclick="ProcessStep">Submit</button>
+    }
+    else
+    {
+        @foreach (var vals in FormElements)
+        {
+            <p>@vals.Key: @vals.Value</p>
+        }
+        <button class="btn btn-primary" @onclick="() => {
+            ProcessStep();
+            Redirect();
+        }">
+            Confirm?
+        </button>
+    }
+</div>
+
+@code {
+    private int stepOfForm = 1;
+    private Dictionary<string, string> FormElements = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        FormElements.Add("Name", "");
+        FormElements.Add("Phone", "");
+        FormElements.Add("Email", "");
+        FormElements.Add("Make", "");
+        FormElements.Add("Model", "");
+        FormElements.Add("Year", "");
+        FormElements.Add("Odometer", "");
+        FormElements.Add("License Plate", "");
+        FormElements.Add("Comments", "");
+        await Task.CompletedTask;
+    }
+
+    public async void Redirect()
+    {
+        await Task.Delay(200);
+        nav.NavigateTo("/submit");
+    }
+
+    public async void ProcessStep()
+    {
+        stepOfForm++;
+        if (stepOfForm > 3)
+        {
+            EmailDTO intakeEmail = new EmailDTO()
+                {
+                    Name = FormElements["Name"],
+                    Body = FormElements
+                };
+
+            //Write all data to database
+
+
+            await _es.SendEmail(intakeEmail);
+        }
+    }
+}
+
+

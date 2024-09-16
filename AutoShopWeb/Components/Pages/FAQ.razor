@@ -1,0 +1,18 @@
+﻿@page "/frequently-asked-questions"
+@using System.Diagnostics.Metrics
+@rendermode InteractiveServer
+
+<br /><br />
+<AutoShopAppLibrary.Components.FrequentlyAskedQuestions></AutoShopAppLibrary.Components.FrequentlyAskedQuestions>
+<WebFooter></WebFooter>
+
+@code {
+
+    Meter demo_meter = new(WebMeters.FAQPageLoads.Name, "1.0.0"); //do I even need this line??
+
+    protected override void OnInitialized()
+    {
+        WebMeters.FAQPageLoads.Add(1); //meter to count how ofen the FAQ page is loaded
+    }
+}
+

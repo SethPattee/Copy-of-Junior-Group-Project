@@ -1,0 +1,13 @@
+﻿@page "/services"
+@using System.Diagnostics.Metrics
+<AutoShopAppLibrary.Components.Services></AutoShopAppLibrary.Components.Services>
+<WebFooter></WebFooter>
+@code {
+
+    Meter demo_meter = new(WebMeters.ServicesPageLoads.Name, "1.0.0"); //do I even need this line??
+
+    protected override void OnInitialized()
+    {
+        WebMeters.ServicesPageLoads.Add(1); //meter to count how ofen the services page is loaded
+    }
+}

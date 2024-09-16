@@ -1,0 +1,40 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:1234"
+    #endpoint: http://prometheus-service:9090
+  # zipkin:
+  #   endpoint: http://zipkin:9411/api/v2/spans
+  loki: 
+    endpoint: http://loki-service:3100/loki/api/v1/push
+
+extensions:
+  # health_check:
+  # zpages:
+  #    endpoint: otel:55679
+
+processors:
+  # Data sources: traces, metrics, logs
+  batch:
+
+service:
+  #extensions: [zpages, health_check]  # Enable zpages
+  extensions: []
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus]
+    # traces:
+    #   receivers: [otlp]
+    #   processors: [batch]
+    #   exporters: [zipkin]
+    logs:
+      receivers: [otlp]
+      #processors: [batch]
+      processors: []
+      exporters: [loki]

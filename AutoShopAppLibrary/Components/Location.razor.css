@@ -1,0 +1,56 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: linear-gradient(135deg, #ffffff, #f0f0f0); /* Gradient background */
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Increased box shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+}
+
+    .container:hover {
+        transform: translateY(-4px); /* Lift effect on hover */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+    }
+
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 28px; /* Larger font size for the heading */
+    margin-bottom: 20px; /* Increased margin */
+}
+
+.info {
+    margin-top: 20px;
+}
+
+p {
+    margin: 10px 0;
+    color: #666;
+    font-size: 16px; /* Larger font size for paragraphs */
+    line-height: 1.6; /* Improved readability */
+}
+
+strong {
+    font-weight: bold;
+    color: #333; /* Matching strong tag color with headings */
+}
+
+/* Hover effect for links */
+p a {
+    color: #007bff; /* Blue color for links */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+    p a:hover {
+        color: #0056b3; /* Darker blue on hover */
+    }

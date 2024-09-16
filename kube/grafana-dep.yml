@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: auto
+  name: auto-grafana-deployment
+  labels:
+    app: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana
+        #args: ["-config.file=/etc/grafana/local-config.yaml"]
+        ports:
+        - containerPort: 3000
+        env: 
+          - name: GF_AUTH_ANONYMOUS_ENABLED
+            value: "true"
+          - name: GF_AUTH_ANONYMOUS_ORG_ROLE
+            value: "Admin"
+          - name: GF_AUTH_DISABLE_LOGIN_FORM
+            value: "true"
+          # - name: GF_DATASOURCES
+          #   value: |-
+          #     {
+          #       "apiVersion": 1,
+          #       "datasources": [
+          #         {
+          #           "name": "Prometheus",
+          #           "type": "prometheus",
+          #           "url": "http://prometheus:9090",
+          #           "access": "proxy",
+          #           "isDefault": true
+          #         }
+          #       ]
+          #     }
+        volumeMounts:
+        - name: grafanastorage
+          mountPath: /var/lib/grafana
+        - name: grafanadatasourse
+          mountPath: /etc/grafana/provisioning/datasources/datasourse.yml
+          subPath: grafana-config.yml
+      volumes:
+      - name: grafanastorage
+        persistentVolumeClaim:
+          claimName: grafana-db-pvc
+      - name: grafanadatasourse
+        configMap:
+          name: grafana-config
+        
+        
+      

@@ -1,0 +1,42 @@
+﻿@using AutoShopAppLibrary.Services
+@using AutoShopAppLibrary
+@using System.Diagnostics
+@using AutoShopAppLibrary.Telemetry
+@inject IDataService _service
+
+
+    <img src="./your-background-image.jpg" class="stats-image" />
+    <div class="buttonandimage">
+        <h1 class="text-settings">Stats</h1>
+        <br />
+        <p class="text-settings">Number of Customers: @numberOfCustomers</p>
+        <br />
+        <p class="text-settings">Number of Workorders: @numberOfWorkorders</p>
+        <br />
+        <p class="text-settings">Number of Cars: @numberOfCars</p>
+    </div>
+
+
+
+@code {
+    private int numberOfCustomers;
+    private int numberOfWorkorders;
+    private int numberOfCars;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {   
+        //Start stopwatch to time how long this takes
+        Stopwatch stopwatch = new();
+        stopwatch.Start();
+
+        numberOfCustomers = await _service.GetNumberofCustomers();
+        numberOfWorkorders = await _service.GetNumberofWorkorders();
+        numberOfCars = await _service.GetNumberofCars();
+        isLoading = false;
+
+        stopwatch.Stop();
+        // var timeElapsed = stopwatch.ElapsedMilliseconds;
+        WebMeters.HistogramLoadStatsPagetime.Record(stopwatch.ElapsedMilliseconds);
+    }
+}

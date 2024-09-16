@@ -1,0 +1,114 @@
+﻿@page "/c"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fireworks & Confetti</title>
+    <style>
+        #thank-you {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center the text */
+            color: white;
+            font-size: 48px;
+            font-family: Arial, sans-serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a shadow for better visibility */
+            z-index: 3; /* Ensure the text appears on top */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: black;
+            text-align: center; /* Center align the text */
+        }
+
+        #thank-you {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center the text */
+            color: white;
+            font-size: 48px;
+            font-family: Arial, sans-serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a shadow for better visibility */
+            z-index: 3; /* Ensure the text appears on top */
+        }
+
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div id="thank-you">Thank You!</div> <!-- Added div for the thank you text -->
+    <script>
+        const fireworkColors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']; // Array of firework colors
+
+        // Declare confettiColors in the global scope
+        const confettiColors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']; // Array of confetti colors
+
+        function getRandomColor(colors) {
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function createFirework() {
+            const firework = document.createElement('div');
+            firework.classList.add('firework');
+            firework.style.left = Math.random() * window.innerWidth + 'px';
+            firework.style.top = window.innerHeight + 'px';
+            firework.style.backgroundColor = getRandomColor(fireworkColors);
+            document.body.appendChild(firework);
+
+            const animation = firework.animate([
+                { transform: 'translateY(0)', opacity: 1 },
+                { transform: 'translateY(-1000px)', opacity: 0 }
+            ], {
+                duration: Math.random() * 2000 + 1000, // Adjust duration randomly for each firework
+                easing: 'ease-out'
+            });
+
+            animation.onfinish = () => {
+                firework.remove();
+            };
+        }
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.left = Math.random() * window.innerWidth + 'px';
+            confetti.style.top = '0';
+            confetti.style.backgroundColor = getRandomColor(confettiColors);
+            document.body.appendChild(confetti);
+
+            const animation = confetti.animate([
+                { transform: 'translateY(0)', opacity: 1 },
+                { transform: `translate(${Math.random() * 200 - 100}px, ${window.innerHeight}px)`, opacity: 0 }
+            ], {
+                duration: Math.random() * 2000 + 1000, // Adjust duration randomly for each confetti
+                easing: 'ease-out'
+            });
+
+            animation.onfinish = () => {
+                confetti.remove();
+            };
+        }
+
+        setInterval(createFirework, 1000); // Adjust the interval to control the frequency of fireworks
+        setInterval(createConfetti, 100); // Adjust the interval to control the amount of confetti
+    </script>
+</body>
+</html>

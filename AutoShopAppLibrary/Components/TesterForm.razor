@@ -1,0 +1,242 @@
+@using AutoShopAppLibrary.Data
+@using AutoShopAppLibrary.Services
+@using AutoShopAppLibrary.Shared
+@using AutoShopAppLibrary.Telemetry
+@using MailKit
+@using MailKit.Net.Smtp
+@using Microsoft.Extensions.Logging
+@using MimeKit
+@using System.Diagnostics
+@inject NavigationManager nav
+@inject IDBService dbService
+@inject ILogger<TesterForm> logger
+
+@inject IEmailService _es
+<img src="./jeep.jpg" class="form-background-image" />
+@if (submitconfirmflag)
+{
+    <div class="confirm-message">
+        <p>Your form has been received. Please wait a moment...</p>
+    </div>
+}
+
+@* <img src="./your-background-image.jpg" class="form-background-image" /> *@
+<div class="loader" id="loader"></div>
+<div class="form-container">
+    <h1>Please take a moment to fill out this form to request service for your car. Your input helps us ensure a seamless drop-off experience for you.</h1>
+    
+
+    <div>
+        <p>
+            Name: <input type="text" @bind-value=@FormElements["Name"] />
+            @if (!string.IsNullOrEmpty(FormElements["Name"]) && !IsValidName(FormElements["Name"]))
+            {
+                <span class="text-danger issue-message">Name must be at least 3 characters long.</span>
+            }
+        </p>
+        <p>
+            Phone: <input type="tel" @bind-value=@FormElements["Phone"] />
+            @if (!string.IsNullOrEmpty(FormElements["Phone"]) && IsValidPhone(FormElements["Phone"]) == "empty")
+            {
+                <span class="text-danger issue-message">Please provide a phone number.</span>
+            }
+            @if (!string.IsNullOrEmpty(FormElements["Phone"]) && IsValidPhone(FormElements["Phone"]) == "short")
+            {
+                <span class="text-danger issue-message">Your phone number entry is too short.</span>
+            }
+            @if (!string.IsNullOrEmpty(FormElements["Phone"]) && IsValidPhone(FormElements["Phone"]) == "bad")
+            {
+                <span class="text-danger issue-message">Please enter a valid phone number.</span>
+            }
+        </p>
+        <p>
+            Email: <input type="email" @bind-value=@FormElements["Email"] />
+            @if (!string.IsNullOrEmpty(FormElements["Email"]) && !IsValidEmail(FormElements["Email"]))
+            {
+                <span class="text-danger issue-message">Please enter a valid email address.</span>
+            }
+        </p>
+        <p>Manufacturer (Ex: Toyota, Ford, etc.): <input type="text" @bind-value=@FormElements["Make"] /></p>
+        <p>Model (Ex: Civic, Corrola, etc.): <input type="text" @bind-value=@FormElements["Model"] /></p>
+        <p>
+            Year: <input type="number" @bind-value=@FormElements["Year"] />
+            @if (!string.IsNullOrEmpty(FormElements["Year"]) && !IsValidYear(FormElements["Year"]))
+            {
+                <span class="text-danger issue-message">Please enter a valid year.</span>
+            }
+        </p>
+        <p>Odometer: <input type="number" @bind-value=@FormElements["Odometer"] />
+            @if (!string.IsNullOrEmpty(FormElements["Odometer"]) && !IsValidOdometer(FormElements["Odometer"]))
+            {
+                <span class="text-danger issue-message">Please enter a valid odometer.</span>
+            }    
+        </p>
+
+        <p>License Plate: <input type="text" @bind-value=@FormElements["License Plate"] />
+            @if (!string.IsNullOrEmpty(FormElements["License Plate"]) && !IsValidLicensePlate(FormElements["License Plate"]))
+            {
+                <span class="text-danger issue-message">Please enter a valid License Plate.</span>
+            }
+        </p>
+        <p>Comments: <textarea rows="4" class="comments-box" contenteditable @bind=@FormElements["Comments"] @bind:event="oninput" /></p>
+    </div>
+    <button class="btn btn-primary" @onclick="HandleFormSubmit" disabled="@IsSubmitted">
+        <!-- Show spinner only when IsSubmitted is true -->
+        @if (IsSubmitted)
+        {
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        }
+        <span> Confirm</span>
+    </button>
+    <p>
+        @if (!submitallowedflag)
+        {
+            <span class="text-danger issue-message">Please fill out all entries.</span>
+        }
+    </p>
+
+</div>
+
+@code {
+    public bool IsSubmitted = false;
+    private Dictionary<string, string> FormElements = new();
+    private bool submitallowedflag = true;
+    private bool submitconfirmflag = false;
+    Stopwatch stopwatch = new();
+    public static double FormSubmitTime = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        FormElements.Add("Name", "");
+        FormElements.Add("Phone", "");
+        FormElements.Add("Email", "");
+        FormElements.Add("Make", "");
+        FormElements.Add("Model", "");
+        FormElements.Add("Year", "");
+        FormElements.Add("Odometer", "");
+        FormElements.Add("License Plate", "");
+        FormElements.Add("Comments", "");
+        await Task.CompletedTask;
+    }
+
+    public bool IsValidName(string name)
+    {
+        return name.Length >= 3;
+    }
+
+    public bool IsValidOdometer(string odometer)
+    {
+        int parsedOdo = -1;
+        return (int.TryParse(odometer, out parsedOdo)) && (parsedOdo >= 0);
+    }
+
+    public async void HandleFormSubmit()
+    {
+        submitallowedflag = CheckFormKeys();
+        if (submitallowedflag)
+        {
+            //start trace (for telemetry) saying form submitted
+            TraceClass.SubmitFormTrace.StartActivity("form submitted");
+            //Start stopwatch to time how long this takes
+            stopwatch.Start();
+
+
+            IsSubmitted = true;
+            EmailDTO intakeEmail = new EmailDTO()
+                {
+                    Name = FormElements["Name"],
+                    Body = FormElements
+                };
+
+            //put data in DB
+            try
+            {
+                await dbService.StoreCustomerDetailsInDatabase(intakeEmail);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message);
+            }
+
+
+            try
+            {
+
+                await _es.SendEmail(intakeEmail);
+
+                //Record how long this took for telemetry purposes
+                await Task.Delay(200);
+                stopwatch.Stop();
+                FormSubmitTime = stopwatch.ElapsedMilliseconds;
+                stopwatch.Reset();
+
+                // Redirect after submission
+                nav.NavigateTo("/submit");
+                IsSubmitted = false;
+            }
+            catch
+            {
+                stopwatch.Stop(); //just stop the stopwatch, but don't record how long it took to the meter.
+                stopwatch.Reset();
+                IsSubmitted = false;
+                //redirect to error page
+                TraceClass.SubmitFormTrace.Dispose(); //we might need this to 
+                                                      //OpenTelemetrySDK.Instance.Tracer.CurrentSpan.End();
+                nav.NavigateTo("/FormSubmitError");
+            }
+        }
+    }
+
+    public bool IsValidEmail(string email)
+    {
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == email;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public string IsValidPhone(string phone)
+    {
+        if (phone == null || phone == "") return "empty"; //Empty string
+
+        else if (phone.Length < 10) return "short"; //Too short
+        else if (phone.Length > 10) return "long";
+
+        else if (phone.Any(character => char.IsLetter(character) && !char.IsDigit(character))) return "bad"; //Bad input
+
+        else return "good";
+    }
+
+    public bool IsValidLicensePlate(string licensePlate)
+    {
+        return (licensePlate ?? "1234678000").Length <= 9;
+    }
+
+    public bool IsValidYear(string year)
+    {
+        int parsedYear;
+        return int.TryParse(year, out parsedYear) && parsedYear > 1886 && parsedYear <= DateTime.Now.Year;
+    }
+
+    public bool CheckFormKeys()
+    {
+        bool name = IsValidName(FormElements["Name"]);
+        bool email = IsValidEmail(FormElements["Email"]);
+        bool phone = IsValidPhone(FormElements["Phone"]) == "good";
+        bool year = IsValidYear(FormElements["Year"]);
+        bool odometer = IsValidOdometer(FormElements["Odometer"]);
+        bool lp = IsValidLicensePlate(FormElements["License Plate"]);
+        return name && email && phone && year && odometer && lp;
+    }
+
+    //for testing purposes
+    public void SetFormElements(Dictionary<string, string> elementsToSet)
+    {
+        FormElements = elementsToSet;
+    }
+}

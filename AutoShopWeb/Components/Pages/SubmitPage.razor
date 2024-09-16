@@ -1,0 +1,18 @@
+﻿@page "/submit"
+@rendermode InteractiveServer
+@inject NavigationManager nav
+
+<AutoShopAppLibrary.Components.Submit></AutoShopAppLibrary.Components.Submit>
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Wait for 3 seconds then navigate to "/"
+            await Task.Delay(3000);
+            nav.NavigateTo("/");
+            nav.Refresh();
+        }
+    }
+}

@@ -1,0 +1,19 @@
+﻿@AutoShopAPI_HostAddress = https://localhost:7158
+
+POST {{AutoShopAPI_HostAddress}}/new/customer
+Content-Type: application/json
+
+{
+  //EmailDTO
+}
+
+###
+
+POST {{AutoShopAPI_HostAddress}}/new/customer
+Content-Type: application/json
+
+{
+  //Email
+}
+
+###

@@ -1,0 +1,42 @@
+﻿@page "/featureflag"
+@using AutoShopWeb
+@inject IConfiguration _config
+
+<style>
+    h3 {
+        padding-top: 2em;
+    }
+
+    div {
+        padding: 0.5em;
+    }
+</style>
+<div>
+    <h3>FeatureFlag</h3>
+
+    <h5>
+        Welcome, this page demonstrates our ability to have a feature flag.
+        <br />
+        When the TurnOnFeatureFlag environment variable is set to true, you will be able to see the number of http requests our site has received below.
+    </h5>
+    @if (TurnOnFeature == "true")
+    {
+        <h5>
+            The feature flag is on!<br />
+            Number of Http Requests Received: @RequestCounterMiddleware.GetTotalRequestCount()
+        </h5>
+    }
+    else
+    {
+        <h5>
+            Sorry, the feature flag is currently disabled. Please set the TurnOnFeatureFlag environment variable to true
+        </h5>
+    }
+
+</div>
+
+@code {
+    string TurnOnFeature => _config["TurnOnFeatureFlag"] ?? throw new NullReferenceException("TurnOnFeatureFlag environment variable was not found");
+}
+
+

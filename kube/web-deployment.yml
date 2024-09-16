@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: auto
+  name: auto-blazor-web-deployment
+  labels:
+    app: blazor-web
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: blazor-web
+  template:
+    metadata:
+      labels:
+        app: blazor-web
+    spec:
+      containers:
+      - name: blazor-web
+        image: 144.17.92.12:5000/auto/blazor-web:${GITHUB_RUN_ID}
+        ports:
+        - containerPort: 8080
+        env:
+        - name: database
+          value: Server=blazor-web-db-service;password=postgres;user id=postgres;database=postgres;
+        - name: COLLECTOR_URL
+          value: http://otel-collector-service:4317
+        - name: MapKey
+          value: "123435"
+        - name: DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE 
+          value: "false"
+        - name: TurnOnFeatureFlag
+          value: "true"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+

@@ -1,0 +1,39 @@
+::deep div.faqbox {
+    width: fit-content;
+    max-width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    margin-top: 30px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-wrap: break-word;
+    backdrop-filter: blur(10px);
+    z-index: 3;
+}
+
+::deep .Question {
+    color: black;
+    font-weight: bold;
+}
+
+::deep .Answer {
+    text-shadow: 1px 1px 1px dimgrey;
+}
+
+::deep .faq-container {
+    margin-top: 70px;
+    overflow: visible;
+}
+
+::deep .faq-background-image {
+    background-color: rgba(255, 255, 255, 0.5); /* Adjust opacity as needed */
+    z-index: -1;
+    width: 105vw;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}

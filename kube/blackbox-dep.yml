@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: auto
+  name: auto-blackbox-deployment
+  labels:
+    app: blackbox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blackbox
+  template:
+    metadata:
+      labels:
+        app: blackbox
+    spec:
+      containers:
+      - name: blackbox
+        image:  prom/blackbox-exporter:v0.23.0
+        ports:
+        - containerPort: 9115
+        volumeMounts:
+        - name: blackboxdatasourse
+          mountPath: /etc/blackbox/blackbox.yml
+          subPath: blackbox-config.yml
+      volumes:
+      - name: blackboxdatasourse
+        configMap:
+          name: blackbox-config
+        
+      

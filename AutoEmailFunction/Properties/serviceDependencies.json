@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "FUNCTIONS_WORKER_RUNTIME": "--csharp",
+    "appInsights1": {
+      "type": "appInsights"
+    },
+    "storage1": {
+      "type": "storage",
+      "connectionId": "AzureWebJobsStorage"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "finalproject-web-student",
+  "version": "1.0.0",
+  "description": "- Application health (current uptime, aggregated uptime)\r - Application performance\r - Application usage (concurrent users, most popular pages)\r - Error count and error messages\r - Near real-time logs",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.43.1",
+    "@types/node": "^20.12.7"
+  }
+}

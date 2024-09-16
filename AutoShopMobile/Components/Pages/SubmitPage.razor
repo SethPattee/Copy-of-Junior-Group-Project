@@ -1,0 +1,15 @@
+@page "/submit"
+@inject NavigationManager nav
+<AutoShopAppLibrary.Components.Submit></AutoShopAppLibrary.Components.Submit>
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Wait for 5 seconds then navigate to "/"
+            await Task.Delay(5000);
+            nav.NavigateTo("/");
+            nav.Refresh();
+        }
+    }
+}

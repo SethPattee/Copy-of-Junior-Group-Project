@@ -1,0 +1,64 @@
+.service-row:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+/*.services-background-image {
+    background-color: rgba(255, 255, 255, 0.5);*/ /* Adjust opacity as needed */
+    /*z-index: -1;
+    width: 100%;
+    max-height: inherit;
+    position: absolute;
+}*/
+
+.services-background-image {
+    background-color: rgba(255, 255, 255, 0.5); /* Adjust opacity as needed */
+    z-index: -1;
+    width: 100vw;
+    height: auto;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -25%);
+    position: absolute;
+    overflow-x: clip;
+    object-fit: cover;
+}
+
+@media(max-width: 991px){
+    .services-background-image{
+        height: 105vh !important;
+        width: auto !important;
+        overflow:visible;
+    }
+}
+/* Custom CSS for hover effect */
+.service-row:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+.services-background-image {
+    z-index: -1;
+    width: 94vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+
+.services-image-box {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    margin: 0 auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 30px 50px;
+}
+
+.services-container {
+    margin-top: 90px;
+    overflow: visible;
+}
+
+.collapse {
+    padding: 10px 0px;
+}

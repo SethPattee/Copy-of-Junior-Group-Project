@@ -1,0 +1,46 @@
+﻿<div class="faq-container">
+    <img src="./workshop-bg2.jpg" class="faq-background-image" />
+    <div class="faqbox">
+        <h3 class="FAQ-header">Frequently Asked Questions</h3>
+        <dl>
+            @foreach(string s in FrequentQuestions)
+            {
+                @if (s.Contains('?'))
+                {
+                    <dt class="Question">@s</dt>
+                }
+                else
+                {
+                    <dd class="Answer">@s</dd>
+                }
+            }
+        </dl>
+    </div>
+</div>
+
+@code {
+    private List<string> FrequentQuestions = new()
+    {
+        "What services does FN'G Autowerks offer?",
+        "FN'G Autowerks offers a wide range of services including routine maintenance such as oil changes, tire rotations, and brake inspections, as well as more extensive repairs like engine diagnostics, transmission repairs, and electrical system troubleshooting.",
+        "How do I schedule an appointment for service?",
+        "Scheduling an appointment is easy! You can either call our service center during business hours or use our online booking system on our website. Simply select the date and time that works best for you, and we'll confirm your appointment.",
+        "Do you work on all makes and models of vehicles?",
+        "Yes, our experienced technicians are trained to work on all makes and models of cars, trucks, and SUVs. Whether you drive a domestic or foreign vehicle, we have the expertise to handle your repairs.",
+        "How long will my repair take?",
+        "The time required for repairs can vary depending on the complexity of the issue and the availability of parts. Our team will provide you with an estimated timeframe when you schedule your appointment, and we'll keep you updated throughout the repair process.",
+        "Do you offer shuttle service or loaner vehicles while my car is being repaired?",
+        "Yes, we understand that being without your vehicle can be inconvenient. That's why we offer shuttle service to nearby locations and, in some cases, loaner vehicles are available. Please inquire when scheduling your appointment for availability.",
+        "Are your technicians certified?",
+        "Absolutely. Our technicians are highly skilled and certified by industry-leading organizations. They undergo regular training to stay up-to-date with the latest automotive technologies and repair techniques.",
+        "Do you use genuine OEM parts for repairs?",
+        "Yes, whenever possible, we use genuine Original Equipment Manufacturer (OEM) parts to ensure the highest quality and compatibility with your vehicle. However, we also offer aftermarket parts as a more affordable option, depending on your preference and budget.",
+        "What payment methods do you accept?",
+        "We accept various forms of payment including cash, credit cards, and debit cards. Additionally, we may offer financing options for larger repairs or unexpected expenses. Please ask our staff for more information.",
+        "Can I drop off my vehicle outside of business hours?",
+        "While we prefer appointments during our regular business hours for the best service, we understand that emergencies happen. You can arrange to drop off your vehicle after hours using our secure drop box system. Just give us a call to make arrangements.",
+        "What measures do you take to ensure customer satisfaction?",
+        "Customer satisfaction is our top priority. We strive to provide transparent communication, quality workmanship, and fair pricing on every service. If you ever have any concerns or questions, our friendly staff is here to assist you."
+    };
+
+}
